@@ -7,6 +7,7 @@ import Data.Map(Map);
 import Debug.Trace;
 import Data.List;
 import HuffmanNAry;
+import Alice;
 import Data.Maybe;
 import System.Environment;
 
@@ -19,7 +20,23 @@ type Ctrie = Trie Char;
 
 main :: IO();
 main = getArgs >>= \case {
-["alice",n] -> print $ all_strings $ p1_improve $ take (read n) alice;
+["alice",n] -> let {
+corpus = take (read n) alice;
+} in
+print $ show_hdepth corpus $ p1_keep corpus;
+["z2"] -> do {
+-- this, with HuffmanArity 3, shows that greedy 1 step does not work.
+-- two steps, the maximum is th the.
+eval_show initial1;
+eval_show initial;
+let { he =fromJust $ p1_improve a10 initial1;};
+eval_show he;
+let { he2 =fromJust $ p1_improve a10 he;};
+eval_show he2;
+eval_show $ fromJust $ p1_improve a10 initial;
+print $ length $ double_step initial1;
+eval_show $ fromJust $ improve_1 initial1 double_step (eval_trie a10);
+};
 _ -> error "unknown args";
 };
 
@@ -34,8 +51,11 @@ tsingleton x = Trie $ Map.singleton x empty_trie;
 empty_trie :: Trie a;
 empty_trie = Trie $ Map.empty;
 
+initial1 :: Ctrie;
+initial1 = flat alphabet;
+
 initial :: Ctrie;
-initial = flat alphabet;
+initial = (cmod initial1) !! 501;  -- th 501
 
 flat :: String -> Ctrie;
 flat = Trie . Map.unions . map (unTrie .tsingleton) ;
@@ -131,79 +151,29 @@ eval (s,n) = n*gettable s;
 eval_trie :: Wordcounts -> Ctrie -> Integer;
 eval_trie l t = hscore $ Map.assocs $ phase1 t l;
 
-p1_improve :: Wordcounts -> Ctrie;
-p1_improve l = keep_improving initial (modifications set_alphabet) (eval_trie l);
+p1_keep :: Wordcounts -> Ctrie;
+p1_keep l = keep_improving initial cmod (eval_trie l);
 
-alice :: Wordcounts;
-alice = [("the", 9399 ),
-("and", 5163 ),
-("a", 4558 ),
-("to", 4334 ),
-("of", 4299 ),
-("i", 2813 ),
-("in", 2735 ),
-("was", 2328 ),
-("it", 2178 ),
-("that", 1944 ),
-("you", 1912 ),
-("she", 1872 ),
-("her", 1728 ),
-("he", 1590 ),
-("as", 1452 ),
-("said", 1451 ),
-("had", 1337 ),
-("s", 1304 ),
-("his", 1241 ),
-("at", 1159 ),
-("with", 1156 ),
-("for", 1145 ),
-("not", 998 ),
-("be", 959 ),
-("on", 932 ),
-("is", 875 ),
-("t", 871 ),
-("but", 839 ),
-("by", 789 ),
-("this", 776 ),
-("have", 759 ),
-("all", 710 ),
-("which", 668 ),
-("from", 660 ),
-("so", 652 ),
-("were", 617 ),
-("no", 595 ),
-("him", 583 ),
-("me", 582 ),
-("bathsheba", 556 ),
-("they", 553 ),
-("there", 548 ),
-("what", 533 ),
-("now", 511 ),
-("if", 510 ),
-("been", 500 ),
-("one", 480 ),
-("an", 476 ),
-("my", 462 ),
-("or", 444 ),
-("when", 442 ),
-("upon", 431 ),
-("do", 428 ),
-("up", 425 ),
-("man", 417 ),
-("would", 407 ),
-("then", 403 ),
-("time", 401 ),
-("alice", 398 ),
-("oak", 395 ),
-("like", 391 ),
-("into", 382 ),
-("out", 382 ),
-("very", 379 ),
-("gabriel", 368 ),
-("about", 363 ),
-("well", 362 ),
-("more", 357 ),
-("down", 340 ),
-("boldwood", 335 )];
+p1_improve :: Wordcounts -> Ctrie -> Maybe Ctrie;
+p1_improve l t = improve_1 t cmod (eval_trie l);
 
+cmod :: Ctrie -> [Ctrie];
+cmod = modifications set_alphabet;
+
+double_step :: Ctrie -> [Ctrie];
+double_step = concatMap cmod . cmod;
+cscores :: Wordcounts -> Ctrie -> [(Integer,Ctrie)];
+cscores l t = sortBy (\a b -> compare (fst a)(fst b)) $
+do {
+u <- cmod t;
+return (eval_trie l u,u)};
+
+a10 :: Wordcounts;
+a10 = take 10 alice;
+
+show_hdepth :: Wordcounts -> Ctrie -> [(String,Int)];
+show_hdepth l t = Map.assocs $ hcounts $ Map.assocs $ phase1 t l;
+
+eval_show :: Ctrie -> IO();
+eval_show t = print $ (eval_trie a10 t, all_strings t);
 }
