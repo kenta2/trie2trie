@@ -42,6 +42,15 @@ return $ Set.insert (Node (v,c1)) $ Set.union l r;
 }
 ;
 
+all_strings :: Trie a -> [[a]];
+all_strings = concatMap all_strings_from . Set.toList;
+
+all_strings_from :: Node a -> [[a]];
+all_strings_from (Node (x,t)) = [[x]]++do {
+  more <- all_strings t;
+  return $ x:more;
+};
+
 -------------------
 
 improve_1 :: forall a score . (Ord score) => a -> (a -> [a]) -> (a -> score) -> Maybe a;
