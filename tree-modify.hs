@@ -7,9 +7,7 @@ import Data.Map(Map);
 -- import Debug.Trace;
 import Data.List;
 
--- type Trie a = Set (Node a);
--- data Node a = Node (a,(Trie a)) deriving (Ord, Eq, Show);
-data Trie a = Trie (Map a (Trie a)) deriving (Show);
+newtype Trie a = Trie {unTrie :: (Map a (Trie a))} deriving (Show);
 type Ctrie = Trie Char;
 
 
@@ -24,9 +22,6 @@ tsingleton x = Trie $ Map.singleton x empty_trie;
 
 empty_trie :: Trie a;
 empty_trie = Trie $ Map.empty;
-
-unTrie :: Trie a -> Map a (Trie a);
-unTrie (Trie m) = m;
 
 initial :: Ctrie;
 initial = flat $ Set.toList test_alphabet;
@@ -73,7 +68,11 @@ Nothing -> start
 
 -----------------
 
-longest_prefix :: Trie a -> [a] -> ([a],[a]);
+-- type Foo a = Map a (Foo a);
+
+longest_prefix :: (Ord a) => Trie a -> [a] -> ([a],[a]);
 longest_prefix _ [] = ([],[]);
-longest_prefix t (h:rest) = undefined;
+longest_prefix (Trie t) s@(h:rest) = case Map.lookup h t of {
+Nothing -> ([],s);
+};
 }
