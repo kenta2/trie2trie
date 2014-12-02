@@ -2,51 +2,53 @@
 module Main where {
 import qualified Data.Set as Set;
 import Data.Set(Set);
+import qualified Data.Map as Map;
+import Data.Map(Map);
 -- import Debug.Trace;
 import Data.List;
 
-type Trie a = Set (Node a);
-data Node a = Node (a,(Trie a)) deriving (Ord, Eq, Show);
+-- type Trie a = Set (Node a);
+-- data Node a = Node (a,(Trie a)) deriving (Ord, Eq, Show);
+data Trie a = Trie (Map a (Trie a)) deriving (Show);
 type Ctrie = Trie Char;
+
+
+main :: IO();
+main = undefined;
 
 test_alphabet :: Set Char;
 test_alphabet = Set.fromList "abc";
 
-tsingleton :: a -> Node a;
-tsingleton x = Node (x,Set.empty);
+tsingleton :: a -> Trie a;
+tsingleton x = Trie $ Map.singleton x empty_trie;
+
+empty_trie :: Trie a;
+empty_trie = Trie $ Map.empty;
+
+unTrie :: Trie a -> Map a (Trie a);
+unTrie (Trie m) = m;
 
 initial :: Ctrie;
-initial = Set.map tsingleton test_alphabet;
+initial = flat $ Set.toList test_alphabet;
 
-test :: String -> Ctrie;
-test s = Set.map tsingleton $ Set.fromList s;
-
-getval :: Node a -> (a,Trie a);
-getval (Node x) = x;
+flat :: String -> Ctrie;
+flat = Trie . Map.unions . map (unTrie .tsingleton) ;
 
 modifications :: forall a . (Ord a) => Set a -> Trie a -> [Trie a];
-modifications alphabet t = do {
-c :: a <- Set.toList $ Set.difference alphabet $ Set.map (fst.getval) t;
-return $ Set.insert (tsingleton c) t;
+modifications alphabet (Trie t) = do {
+c :: a <- Set.toList $ Set.difference alphabet $ Map.keysSet $ t;
+return $ Trie $ Map.insert c empty_trie t;
 } ++ do {
-let {
-g1 :: Node a -> (Node a, (Trie a,Trie a));
-g1 n = (n, Set.split n t);
+(k::a, v::Trie a) <- Map.assocs t;
+new :: Trie a <- modifications alphabet v;
+return $ Trie $ Map.insert k new t;
 };
-((Node ((v::a),(children::Trie a))),(l::Trie a,r::Trie a)) <- map g1 $ Set.toList t;
--- traceM $ "\nnow evaluating " ++ show qq;
-c1 :: Trie a <- modifications alphabet children;
--- traceM $ "\nand c1 " ++ show c1;
-return $ Set.insert (Node (v,c1)) $ Set.union l r;
--- return $ Set.union l r;
-}
-;
 
 all_strings :: Trie a -> [[a]];
-all_strings = concatMap all_strings_from . Set.toList;
+all_strings = concatMap all_strings_from . Map.assocs . unTrie;
 
-all_strings_from :: Node a -> [[a]];
-all_strings_from (Node (x,t)) = [[x]]++do {
+all_strings_from :: (a, Trie a) -> [[a]];
+all_strings_from (x,t) = [[x]]++do {
   more <- all_strings t;
   return $ x:more;
 };
@@ -71,7 +73,7 @@ Nothing -> start
 
 -----------------
 
-
-main :: IO();
-main = undefined;
+longest_prefix :: Trie a -> [a] -> ([a],[a]);
+longest_prefix _ [] = ([],[]);
+longest_prefix t (h:rest) = undefined;
 }
