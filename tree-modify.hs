@@ -7,6 +7,9 @@ import Data.Map(Map);
 -- import Debug.Trace;
 import Data.List;
 
+-- cycle in type synonym declarations
+-- type Foo a = Map a (Foo a);
+
 newtype Trie a = Trie {unTrie :: (Map a (Trie a))} deriving (Show);
 type Ctrie = Trie Char;
 
@@ -68,11 +71,17 @@ Nothing -> start
 
 -----------------
 
--- type Foo a = Map a (Foo a);
-
-longest_prefix :: (Ord a) => Trie a -> [a] -> ([a],[a]);
+longest_prefix :: forall a. (Ord a) => Trie a -> [a] -> ([a],[a]);
 longest_prefix _ [] = ([],[]);
 longest_prefix (Trie t) s@(h:rest) = case Map.lookup h t of {
 Nothing -> ([],s);
+Just subt -> let { (x :: [a],y :: [a]) = longest_prefix subt rest; } in
+(h:x,y);
 };
+
+break_by_prefix :: forall a. (Ord a) => Trie a -> [a] -> [[a]];
+break_by_prefix _ [] = [];
+break_by_prefix t s = let {
+(x,y) = longest_prefix t s;
+} in x:break_by_prefix t y;
 }
