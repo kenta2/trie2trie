@@ -6,6 +6,7 @@ import qualified Data.PriorityQueue.FingerTree as PQ;
 import Control.Monad;
 import qualified Data.Map as Map;
 import Data.Map(Map);
+import Data.Either;
 
 get_n :: forall k v . (Ord k) => PQ.PQueue k v -> Int -> Maybe ([(k,v)], PQ.PQueue k v);
 get_n q 0 = Just ([],q);
@@ -31,8 +32,8 @@ prepare :: (Ord w) => [(a,w)] -> PQ.PQueue w (HuffmanTree a);
 prepare = PQ.fromList . map (\ (x,w) -> (w, Leaf x));
 
 -- needs to be padded to (length == 1 mod (n-1))
-huffman :: forall a w . (Ord w, Num w) => Int -> [(a,w)] -> HuffmanTree a;
-huffman n = build . prepare where {
+huffman1 :: forall a w . (Ord w, Num w) => Int -> [(a,w)] -> HuffmanTree a;
+huffman1 n = build . prepare where {
   build :: PQ.PQueue w (HuffmanTree a) -> HuffmanTree a;
   build pq = case get_singleton pq of {
     Just x -> snd x;
@@ -48,4 +49,27 @@ f current (Leaf x) = Map.singleton x current;
 f current (Node ts) = Map.unions $ map (f (1+current)) ts;
 };
 
+num_to_add :: Int -> Int -> Int;
+num_to_add n l = let {
+ m :: Int;
+ m = mod l (n-1);
+} in mod (n-m) (n-1);
+
+huffman :: forall a w . (Ord w, Num w) => Int -> [(a,w)] -> HuffmanTree (Either Int a);
+huffman n l = let {
+padsize :: Int;
+padsize = num_to_add n (length l);
+pad :: [(Either Int a,w)];
+pad = zip (map Left $ enumFromTo 1 padsize) $ repeat 0;
+mkRight :: (a,w) -> (Either Int a,w);
+mkRight (x,y) = (Right x, y);
+} in huffman1 n $ pad ++ map mkRight l;
+
+
+noLefts :: (Ord b) => Map (Either a b) v -> Map b v;
+noLefts = Map.fromList . map (\(Right x,y)->(x,y)) . filter (isRight . fst) . Map.assocs;
+-- fromAscList is possible
+
+huffman_depths :: (Ord a, Ord w, Num w) => Int -> [(a,w)] -> Map a Int;
+huffman_depths n l = noLefts $ get_depths $ huffman n l;
 }
