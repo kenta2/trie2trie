@@ -37,6 +37,18 @@ eval_show $ fromJust $ p1_improve a10 initial;
 print $ length $ double_step initial1;
 eval_show $ fromJust $ improve_1 initial1 double_step (eval_trie a10);
 };
+["z3"] -> do {
+-- two single steps from "the" does get the same result as a double, namely nd of
+let { the = fromJust $ p1_improve a10 initial };
+eval_show the;
+let { t2 = fromJust $ p1_improve a10 the };
+eval_show t2;
+let { t3 = fromJust $ p1_improve a10 t2 };
+eval_show t3;
+print $ length $ double_step the;
+eval_show $ fromJust $ improve_1 the double_step (eval_trie a10);
+
+};
 _ -> error "unknown args";
 };
 
