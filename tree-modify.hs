@@ -6,6 +6,8 @@ import qualified Data.Map as Map;
 import Data.Map(Map);
 -- import Debug.Trace;
 import Data.List;
+import HuffmanNAry;
+import Data.Maybe;
 
 -- cycle in type synonym declarations
 -- type Foo a = Map a (Foo a);
@@ -17,8 +19,10 @@ type Ctrie = Trie Char;
 main :: IO();
 main = undefined;
 
-test_alphabet :: Set Char;
-test_alphabet = Set.fromList "abc";
+alphabet :: String;
+alphabet = "abc";
+set_alphabet :: Set Char;
+set_alphabet = Set.fromList alphabet;
 
 tsingleton :: a -> Trie a;
 tsingleton x = Trie $ Map.singleton x empty_trie;
@@ -27,18 +31,18 @@ empty_trie :: Trie a;
 empty_trie = Trie $ Map.empty;
 
 initial :: Ctrie;
-initial = flat $ Set.toList test_alphabet;
+initial = flat alphabet;
 
 flat :: String -> Ctrie;
 flat = Trie . Map.unions . map (unTrie .tsingleton) ;
 
 modifications :: forall a . (Ord a) => Set a -> Trie a -> [Trie a];
-modifications alphabet (Trie t) = do {
-c :: a <- Set.toList $ Set.difference alphabet $ Map.keysSet $ t;
+modifications my_alphabet (Trie t) = do {
+c :: a <- Set.toList $ Set.difference my_alphabet $ Map.keysSet $ t;
 return $ Trie $ Map.insert c empty_trie t;
 } ++ do {
 (k::a, v::Trie a) <- Map.assocs t;
-new :: Trie a <- modifications alphabet v;
+new :: Trie a <- modifications my_alphabet v;
 return $ Trie $ Map.insert k new t;
 };
 
@@ -84,4 +88,36 @@ break_by_prefix _ [] = [];
 break_by_prefix t s = let {
 (x,y) = longest_prefix t s;
 } in x:break_by_prefix t y;
+
+-- all_elems :: forall a. (Ord a) => Trie a -> [a] -> [[a]];
+-- all_elems t = concatMap (tail . inits) . break_by_prefix t;
+
+counts :: (Ord a) => [a] -> Map a Integer;
+counts = Map.unionsWith (+) . map (\x -> Map.singleton x 1);
+
+p1word1 :: (Ord a) => Trie a -> ([a],Integer) -> Map [a] Integer;
+p1word1 t (s,n) = Map.map (*n) $ counts $ break_by_prefix t s;
+
+p1words :: (Ord a) => Trie a -> [([a],Integer)] -> Map [a] Integer;
+p1words t = Map.unionsWith (+) . map (p1word1 t);
+
+dummies :: [(String,Integer)];
+dummies = map (\c -> ([c],1)) alphabet;
+
+phase1 :: Ctrie -> [(String,Integer)] -> Map String Integer;
+phase1 t l = p1words t $ dummies ++ l;
+
+hcounts :: (Ord a, Ord w, Num w) => [(a,w)] -> Map a Int;
+hcounts l = huffman_depths (HuffmanArity 3) l;
+
+hscore :: forall a . (Ord a) => [(a,Integer)] -> Integer;
+hscore l = let {
+table :: Map a Int;
+table = hcounts l;
+gettable :: a -> Integer;
+gettable a = fromIntegral $ fromJust $ Map.lookup a table;
+eval :: (a,Integer) -> Integer;
+eval (s,n) = n*gettable s;
+} in sum $ map eval l;
+
 }
