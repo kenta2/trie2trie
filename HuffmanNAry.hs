@@ -4,6 +4,8 @@
 module HuffmanNAry where {
 import qualified Data.PriorityQueue.FingerTree as PQ;
 import Control.Monad;
+import qualified Data.Map as Map;
+import Data.Map(Map);
 
 get_n :: forall k v . (Ord k) => PQ.PQueue k v -> Int -> Maybe ([(k,v)], PQ.PQueue k v);
 get_n q 0 = Just ([],q);
@@ -39,5 +41,11 @@ huffman n = build . prepare where {
     Just (l, pq2) -> build $ PQ.insert (sum $ map fst l) (Node $ map snd l) pq2;
 }}};
 
+get_depths :: forall a . (Ord a) => HuffmanTree a -> Map a Int;
+get_depths = f 0 where {
+f :: Int -> HuffmanTree a -> Map a Int;
+f current (Leaf x) = Map.singleton x current;
+f current (Node ts) = Map.unions $ map (f (1+current)) ts;
+};
 
 }
