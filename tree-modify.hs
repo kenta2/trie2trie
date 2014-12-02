@@ -53,6 +53,7 @@ all_strings_from (Node (x,t)) = [[x]]++do {
 
 -------------------
 
+-- not exactly the best way given all the redundant evaluations
 improve_1 :: forall a score . (Ord score) => a -> (a -> [a]) -> (a -> score) -> Maybe a;
 improve_1 start nexts eval = let {
 s :: a -> a -> Ordering;
