@@ -1,4 +1,4 @@
-{-# LANGUAGE ScopedTypeVariables #-}
+{-# LANGUAGE ScopedTypeVariables, CPP #-}
 -- Based on Data.Compression.Huffman
 
 module HuffmanNAry where {
@@ -6,9 +6,19 @@ import qualified Data.PriorityQueue.FingerTree as PQ;
 import Control.Monad;
 import qualified Data.Map as Map;
 import Data.Map(Map);
+
+#if __GLASGOW_HASKELL__ > 706
 import Data.Either;
+#endif
 
 newtype HuffmanArity = HuffmanArity Int deriving (Show);
+
+#if __GLASGOW_HASKELL__ < 708
+isRight :: Either a b-> Bool;
+isRight (Left  _) = False;
+isRight (Right _) = True;
+#endif
+
 
 get_n :: forall k v . (Ord k) => PQ.PQueue k v -> Int -> Maybe ([(k,v)], PQ.PQueue k v);
 get_n q 0 = Just ([],q);
