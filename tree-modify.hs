@@ -24,6 +24,10 @@ main = getArgs >>= \case {
 corpus = take (read n) alice;
 } in
 print $ show_hdepth corpus $ p1_keep corpus;
+["go",fn] -> do {
+corpus <- read_corpus fn;
+print $ show_hdepth corpus $ p1_keep corpus;
+};
 ["z2"] -> do {
 -- this, with HuffmanArity 3, shows that greedy 1 step does not work.
 -- two steps, the maximum is th the.
@@ -66,8 +70,14 @@ empty_trie = Trie $ Map.empty;
 initial1 :: Ctrie;
 initial1 = flat alphabet;
 
+initial2 :: Ctrie;
+initial2 = (cmod initial1) !! 501;  -- th 501
+
 initial :: Ctrie;
-initial = (cmod initial1) !! 501;  -- th 501
+initial=initial3;
+
+initial3 :: Ctrie;
+initial3 = Trie {unTrie = Map.fromList [('a',Trie {unTrie = Map.fromList [('k',Trie {unTrie = Map.fromList [('e',Trie {unTrie = Map.fromList []})]}),('n',Trie {unTrie = Map.fromList []}),('q',Trie {unTrie = Map.fromList []})]}),('b',Trie {unTrie = Map.fromList []}),('c',Trie {unTrie = Map.fromList [('k',Trie {unTrie = Map.fromList []})]}),('d',Trie {unTrie = Map.fromList []}),('e',Trie {unTrie = Map.fromList [('x',Trie {unTrie = Map.fromList [('p',Trie {unTrie = Map.fromList [('e',Trie {unTrie = Map.fromList [('c',Trie {unTrie = Map.fromList [('t',Trie {unTrie = Map.fromList [('e',Trie {unTrie = Map.fromList [('d',Trie {unTrie = Map.fromList []})]})]})]}),('n',Trie {unTrie = Map.fromList [('s',Trie {unTrie = Map.fromList [('i',Trie {unTrie = Map.fromList [('v',Trie {unTrie = Map.fromList [('e',Trie {unTrie = Map.fromList []})]})]})]})]}),('r',Trie {unTrie = Map.fromList [('i',Trie {unTrie = Map.fromList [('e',Trie {unTrie = Map.fromList [('n',Trie {unTrie = Map.fromList [('c',Trie {unTrie = Map.fromList [('e',Trie {unTrie = Map.fromList []})]})]})]})]}),('t',Trie {unTrie = Map.fromList []})]})]}),('l',Trie {unTrie = Map.fromList [('a',Trie {unTrie = Map.fromList []})]})]})]})]}),('f',Trie {unTrie = Map.fromList []}),('g',Trie {unTrie = Map.fromList []}),('h',Trie {unTrie = Map.fromList []}),('i',Trie {unTrie = Map.fromList [('n',Trie {unTrie = Map.fromList [('k',Trie {unTrie = Map.fromList []})]})]}),('j',Trie {unTrie = Map.fromList [('o',Trie {unTrie = Map.fromList []}),('u',Trie {unTrie = Map.fromList [('d',Trie {unTrie = Map.fromList [('g',Trie {unTrie = Map.fromList [('e',Trie {unTrie = Map.fromList []})]}),('i',Trie {unTrie = Map.fromList [('c',Trie {unTrie = Map.fromList [('i',Trie {unTrie = Map.fromList [('a',Trie {unTrie = Map.fromList []})]})]})]})]}),('r',Trie {unTrie = Map.fromList [('y',Trie {unTrie = Map.fromList []})]}),('s',Trie {unTrie = Map.fromList [('t',Trie {unTrie = Map.fromList []})]})]})]}),('k',Trie {unTrie = Map.fromList [('e',Trie {unTrie = Map.fromList []}),('n',Trie {unTrie = Map.fromList [('e',Trie {unTrie = Map.fromList [('w',Trie {unTrie = Map.fromList []})]}),('o',Trie {unTrie = Map.fromList [('w',Trie {unTrie = Map.fromList []})]})]})]}),('l',Trie {unTrie = Map.fromList []}),('m',Trie {unTrie = Map.fromList []}),('n',Trie {unTrie = Map.fromList []}),('o',Trie {unTrie = Map.fromList [('k',Trie {unTrie = Map.fromList []})]}),('p',Trie {unTrie = Map.fromList []}),('q',Trie {unTrie = Map.fromList [('u',Trie {unTrie = Map.fromList [('a',Trie {unTrie = Map.fromList [('l',Trie {unTrie = Map.fromList [('i',Trie {unTrie = Map.fromList []})]})]}),('e',Trie {unTrie = Map.fromList [('n',Trie {unTrie = Map.fromList []}),('s',Trie {unTrie = Map.fromList [('t',Trie {unTrie = Map.fromList [('i',Trie {unTrie = Map.fromList [('o',Trie {unTrie = Map.fromList [('n',Trie {unTrie = Map.fromList [('s',Trie {unTrie = Map.fromList []})]})]})]})]})]})]}),('i',Trie {unTrie = Map.fromList []}),('o',Trie {unTrie = Map.fromList [('t',Trie {unTrie = Map.fromList [('e',Trie {unTrie = Map.fromList []})]})]})]})]}),('r',Trie {unTrie = Map.fromList [('e',Trie {unTrie = Map.fromList []}),('k',Trie {unTrie = Map.fromList []})]}),('s',Trie {unTrie = Map.fromList []}),('t',Trie {unTrie = Map.fromList [('h',Trie {unTrie = Map.fromList [('e',Trie {unTrie = Map.fromList []})]}),('v',Trie {unTrie = Map.fromList []})]}),('u',Trie {unTrie = Map.fromList []}),('v',Trie {unTrie = Map.fromList [('a',Trie {unTrie = Map.fromList []}),('e',Trie {unTrie = Map.fromList [('n',Trie {unTrie = Map.fromList []}),('r',Trie {unTrie = Map.fromList [('y',Trie {unTrie = Map.fromList []})]})]}),('i',Trie {unTrie = Map.fromList [('n',Trie {unTrie = Map.fromList [('c',Trie {unTrie = Map.fromList [('e',Trie {unTrie = Map.fromList [('d',Trie {unTrie = Map.fromList []})]})]}),('g',Trie {unTrie = Map.fromList []})]})]}),('o',Trie {unTrie = Map.fromList [('i',Trie {unTrie = Map.fromList [('c',Trie {unTrie = Map.fromList [('e',Trie {unTrie = Map.fromList []})]}),('d',Trie {unTrie = Map.fromList []})]}),('l',Trie {unTrie = Map.fromList [('u',Trie {unTrie = Map.fromList []}),('v',Trie {unTrie = Map.fromList [('e',Trie {unTrie = Map.fromList [('d',Trie {unTrie = Map.fromList []})]})]})]}),('r',Trie {unTrie = Map.fromList []}),('t',Trie {unTrie = Map.fromList [('e',Trie {unTrie = Map.fromList []})]})]}),('s',Trie {unTrie = Map.fromList []})]}),('w',Trie {unTrie = Map.fromList []}),('x',Trie {unTrie = Map.fromList []}),('y',Trie {unTrie = Map.fromList []}),('z',Trie {unTrie = Map.fromList []})]};
 
 flat :: String -> Ctrie;
 flat = Trie . Map.unions . map (unTrie .tsingleton) ;
@@ -105,9 +115,9 @@ ebest = eval best;
 } in if ebest < eval start
 then trace ("score = " ++ show ebest) $ Just best else Nothing;
 
-keep_improving :: (Show score, Ord score) => a -> (a -> [a]) -> (a -> score) -> a;
+keep_improving :: (Show score, Ord score, Show a) => a -> (a -> [a]) -> (a -> score) -> a;
 keep_improving start nexts eval = case improve_1 start nexts eval of {
-Just new -> keep_improving new nexts eval;
+Just new -> trace ("improved " ++ show new) $ keep_improving new nexts eval;
 Nothing -> start
 };
 
@@ -148,7 +158,7 @@ phase1 :: Ctrie -> Wordcounts -> Map String Integer;
 phase1 t l = p1words t $ dummies ++ l;
 
 hcounts :: (Ord a, Ord w, Num w) => [(a,w)] -> Map a Int;
-hcounts l = huffman_depths (HuffmanArity 3) l;
+hcounts l = huffman_depths (HuffmanArity 26) l;
 
 hscore :: forall a . (Ord a) => [(a,Integer)] -> Integer;
 hscore l = let {
@@ -188,4 +198,11 @@ show_hdepth l t = Map.assocs $ hcounts $ Map.assocs $ phase1 t l;
 
 eval_show :: Ctrie -> IO();
 eval_show t = print $ (eval_trie a10 t, all_strings t);
+
+read_corpus :: String -> IO Wordcounts;
+read_corpus fn = readFile fn >>= return . map parse . lines;
+
+parse :: String -> (String,Integer);
+parse s = let { w = words s} in (w!!1, read $ head w);
+
 }

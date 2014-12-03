@@ -70,7 +70,7 @@ mkRight (x,y) = (Right x, y);
 
 noLefts :: (Ord b) => Map (Either a b) v -> Map b v;
 noLefts = Map.fromList . map (\(Right x,y)->(x,y)) . filter (isRight . fst) . Map.assocs;
--- fromAscList is possible
+-- fromAscList is possible; does not seem to make things noticeably better
 
 huffman_depths :: (Ord a, Ord w, Num w) => HuffmanArity -> [(a,w)] -> Map a Int;
 huffman_depths n l = noLefts $ get_depths $ huffman n l;
