@@ -74,7 +74,7 @@ initial2 :: Ctrie;
 initial2 = (cmod initial1) !! 501;  -- th 501
 
 initial :: Ctrie;
-initial=initial3;
+initial=initial1;
 
 initial3 :: Ctrie;
 initial3 = Trie {unTrie = Map.fromList [('a',Trie {unTrie = Map.fromList [('k',Trie {unTrie = Map.fromList [('e',Trie {unTrie = Map.fromList []})]}),('n',Trie {unTrie = Map.fromList []}),('q',Trie {unTrie = Map.fromList []})]}),('b',Trie {unTrie = Map.fromList []}),('c',Trie {unTrie = Map.fromList [('k',Trie {unTrie = Map.fromList []})]}),('d',Trie {unTrie = Map.fromList []}),('e',Trie {unTrie = Map.fromList [('x',Trie {unTrie = Map.fromList [('p',Trie {unTrie = Map.fromList [('e',Trie {unTrie = Map.fromList [('c',Trie {unTrie = Map.fromList [('t',Trie {unTrie = Map.fromList [('e',Trie {unTrie = Map.fromList [('d',Trie {unTrie = Map.fromList []})]})]})]}),('n',Trie {unTrie = Map.fromList [('s',Trie {unTrie = Map.fromList [('i',Trie {unTrie = Map.fromList [('v',Trie {unTrie = Map.fromList [('e',Trie {unTrie = Map.fromList []})]})]})]})]}),('r',Trie {unTrie = Map.fromList [('i',Trie {unTrie = Map.fromList [('e',Trie {unTrie = Map.fromList [('n',Trie {unTrie = Map.fromList [('c',Trie {unTrie = Map.fromList [('e',Trie {unTrie = Map.fromList []})]})]})]})]}),('t',Trie {unTrie = Map.fromList []})]})]}),('l',Trie {unTrie = Map.fromList [('a',Trie {unTrie = Map.fromList []})]})]})]})]}),('f',Trie {unTrie = Map.fromList []}),('g',Trie {unTrie = Map.fromList []}),('h',Trie {unTrie = Map.fromList []}),('i',Trie {unTrie = Map.fromList [('n',Trie {unTrie = Map.fromList [('k',Trie {unTrie = Map.fromList []})]})]}),('j',Trie {unTrie = Map.fromList [('o',Trie {unTrie = Map.fromList []}),('u',Trie {unTrie = Map.fromList [('d',Trie {unTrie = Map.fromList [('g',Trie {unTrie = Map.fromList [('e',Trie {unTrie = Map.fromList []})]}),('i',Trie {unTrie = Map.fromList [('c',Trie {unTrie = Map.fromList [('i',Trie {unTrie = Map.fromList [('a',Trie {unTrie = Map.fromList []})]})]})]})]}),('r',Trie {unTrie = Map.fromList [('y',Trie {unTrie = Map.fromList []})]}),('s',Trie {unTrie = Map.fromList [('t',Trie {unTrie = Map.fromList []})]})]})]}),('k',Trie {unTrie = Map.fromList [('e',Trie {unTrie = Map.fromList []}),('n',Trie {unTrie = Map.fromList [('e',Trie {unTrie = Map.fromList [('w',Trie {unTrie = Map.fromList []})]}),('o',Trie {unTrie = Map.fromList [('w',Trie {unTrie = Map.fromList []})]})]})]}),('l',Trie {unTrie = Map.fromList []}),('m',Trie {unTrie = Map.fromList []}),('n',Trie {unTrie = Map.fromList []}),('o',Trie {unTrie = Map.fromList [('k',Trie {unTrie = Map.fromList []})]}),('p',Trie {unTrie = Map.fromList []}),('q',Trie {unTrie = Map.fromList [('u',Trie {unTrie = Map.fromList [('a',Trie {unTrie = Map.fromList [('l',Trie {unTrie = Map.fromList [('i',Trie {unTrie = Map.fromList []})]})]}),('e',Trie {unTrie = Map.fromList [('n',Trie {unTrie = Map.fromList []}),('s',Trie {unTrie = Map.fromList [('t',Trie {unTrie = Map.fromList [('i',Trie {unTrie = Map.fromList [('o',Trie {unTrie = Map.fromList [('n',Trie {unTrie = Map.fromList [('s',Trie {unTrie = Map.fromList []})]})]})]})]})]})]}),('i',Trie {unTrie = Map.fromList []}),('o',Trie {unTrie = Map.fromList [('t',Trie {unTrie = Map.fromList [('e',Trie {unTrie = Map.fromList []})]})]})]})]}),('r',Trie {unTrie = Map.fromList [('e',Trie {unTrie = Map.fromList []}),('k',Trie {unTrie = Map.fromList []})]}),('s',Trie {unTrie = Map.fromList []}),('t',Trie {unTrie = Map.fromList [('h',Trie {unTrie = Map.fromList [('e',Trie {unTrie = Map.fromList []})]}),('v',Trie {unTrie = Map.fromList []})]}),('u',Trie {unTrie = Map.fromList []}),('v',Trie {unTrie = Map.fromList [('a',Trie {unTrie = Map.fromList []}),('e',Trie {unTrie = Map.fromList [('n',Trie {unTrie = Map.fromList []}),('r',Trie {unTrie = Map.fromList [('y',Trie {unTrie = Map.fromList []})]})]}),('i',Trie {unTrie = Map.fromList [('n',Trie {unTrie = Map.fromList [('c',Trie {unTrie = Map.fromList [('e',Trie {unTrie = Map.fromList [('d',Trie {unTrie = Map.fromList []})]})]}),('g',Trie {unTrie = Map.fromList []})]})]}),('o',Trie {unTrie = Map.fromList [('i',Trie {unTrie = Map.fromList [('c',Trie {unTrie = Map.fromList [('e',Trie {unTrie = Map.fromList []})]}),('d',Trie {unTrie = Map.fromList []})]}),('l',Trie {unTrie = Map.fromList [('u',Trie {unTrie = Map.fromList []}),('v',Trie {unTrie = Map.fromList [('e',Trie {unTrie = Map.fromList [('d',Trie {unTrie = Map.fromList []})]})]})]}),('r',Trie {unTrie = Map.fromList []}),('t',Trie {unTrie = Map.fromList [('e',Trie {unTrie = Map.fromList []})]})]}),('s',Trie {unTrie = Map.fromList []})]}),('w',Trie {unTrie = Map.fromList []}),('x',Trie {unTrie = Map.fromList []}),('y',Trie {unTrie = Map.fromList []}),('z',Trie {unTrie = Map.fromList []})]};
@@ -157,8 +157,11 @@ dummies = map (\c -> ([c],1)) alphabet;
 phase1 :: Ctrie -> Wordcounts -> Map String Integer;
 phase1 t l = p1words t $ dummies ++ l;
 
+arity :: HuffmanArity;
+arity = HuffmanArity 2;
+
 hcounts :: (Ord a, Ord w, Num w) => [(a,w)] -> Map a Int;
-hcounts l = huffman_depths (HuffmanArity 26) l;
+hcounts = huffman_depths . huffman arity;
 
 hscore :: forall a . (Ord a) => [(a,Integer)] -> Integer;
 hscore l = let {
@@ -193,9 +196,6 @@ return (eval_trie l u,u)};
 a10 :: Wordcounts;
 a10 = take 10 alice;
 
-show_hdepth :: Wordcounts -> Ctrie -> [(String,Int)];
-show_hdepth l t = Map.assocs $ hcounts $ Map.assocs $ phase1 t l;
-
 eval_show :: Ctrie -> IO();
 eval_show t = print $ (eval_trie a10 t, all_strings t);
 
@@ -204,5 +204,12 @@ read_corpus fn = readFile fn >>= return . map parse . lines;
 
 parse :: String -> (String,Integer);
 parse s = let { w = words s} in (w!!1, read $ head w);
+
+show_hdepth :: Wordcounts -> Ctrie -> (HuffmanTreeE String,[(String,Int)]);
+show_hdepth l t = let {
+h :: HuffmanTreeE String;
+h = huffman arity $ Map.assocs $ phase1 t l;
+} in
+(h,Map.assocs $ hcounts $ Map.assocs $ phase1 t l);
 
 }

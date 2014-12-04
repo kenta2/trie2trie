@@ -13,6 +13,7 @@ import Data.Either;
 
 newtype HuffmanArity = HuffmanArity Int deriving (Show);
 
+
 #if __GLASGOW_HASKELL__ < 708
 isRight :: Either a b-> Bool;
 isRight (Left  _) = False;
@@ -39,6 +40,7 @@ get_singleton q = do {
 };
 
 data HuffmanTree a = Leaf a | Node [HuffmanTree a] deriving (Show);
+type HuffmanTreeE a = HuffmanTree (Either Int a);
 
 prepare :: (Ord w) => [(a,w)] -> PQ.PQueue w (HuffmanTree a);
 prepare = PQ.fromList . map (\ (x,w) -> (w, Leaf x));
@@ -67,7 +69,7 @@ num_to_add (HuffmanArity n) l = let {
  m = mod l (n-1);
 } in mod (n-m) (n-1);
 
-huffman :: forall a w . (Ord w, Num w) => HuffmanArity -> [(a,w)] -> HuffmanTree (Either Int a);
+huffman :: forall a w . (Ord w, Num w) => HuffmanArity -> [(a,w)] -> HuffmanTreeE a;
 huffman n l = let {
 padsize :: Int;
 padsize = num_to_add n (length l);
@@ -82,6 +84,9 @@ noLefts :: (Ord b) => Map (Either a b) v -> Map b v;
 noLefts = Map.fromList . map (\(Right x,y)->(x,y)) . filter (isRight . fst) . Map.assocs;
 -- fromAscList is possible; does not seem to make things noticeably better
 
-huffman_depths :: (Ord a, Ord w, Num w) => HuffmanArity -> [(a,w)] -> Map a Int;
-huffman_depths n l = noLefts $ get_depths $ huffman n l;
+-- huffman_depths :: (Ord a, Ord w, Num w) => HuffmanArity -> [(a,w)] -> Map a Int;
+-- huffman_depths n l = noLefts $ get_depths $ huffman n l;
+
+huffman_depths :: (Ord a) => HuffmanTreeE a -> Map a Int;
+huffman_depths = noLefts . get_depths;
 }
