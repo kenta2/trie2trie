@@ -10,6 +10,7 @@ import HuffmanNAry;
 import Alice;
 import Data.Maybe;
 import System.Environment;
+import Control.Parallel.Strategies;
 
 -- cycle in type synonym declarations
 -- type Foo a = Map a (Foo a);
@@ -106,10 +107,17 @@ all_strings_from (x,t) = [[x]]++do {
 -- not exactly the best way given all the redundant evaluations
 improve_1 :: forall a score . (Ord score, Show score) => a -> (a -> [a]) -> (a -> score) -> Maybe a;
 improve_1 start nexts eval = let {
-s :: a -> a -> Ordering;
-s x y = compare (eval x) (eval y);
+-- s :: a -> a -> Ordering;
+-- s x y = compare (eval x) (eval y);
+s2 :: (score,a) -> (score,a) -> Ordering;
+s2 x y = compare (fst x) (fst y);
 best :: a;
-best = minimumBy s $ nexts start;
+-- best = minimumBy s $ nexts start;
+best = snd $ minimumBy s2 all_scores;
+all_scores :: [(score,a)];
+all_scores = parMap t1strat (\x -> (eval x,x)) $ nexts start;
+t1strat :: Strategy (score,a);
+t1strat = evalTuple2 rseq r0;
 ebest :: score;
 ebest = eval best;
 } in if ebest < eval start
