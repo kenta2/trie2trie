@@ -15,7 +15,7 @@ import Control.Parallel.Strategies;
 -- cycle in type synonym declarations
 -- type Foo a = Map a (Foo a);
 
-newtype Trie a = Trie {unTrie :: (Map a (Trie a))} deriving (Show);
+newtype Trie a = Trie {unTrie :: (Map a (Trie a))} deriving (Show, Read);
 type Ctrie = Trie Char;
 
 
@@ -27,6 +27,9 @@ corpus = take (read n) alice;
 print $ show_hdepth corpus $ p1_keep corpus;
 ["go",fn] -> do {
 corpus <- read_corpus fn;
+print arity;
+putStrLn $ "corpus length = " ++ (show $ length corpus);
+putStrLn $ "corpus weight = " ++ (show $ sum $ map ( \ (s,n) -> n*(fromIntegral$length s)) corpus);
 print $ show_hdepth corpus $ p1_keep corpus;
 };
 ["z2"] -> do {
@@ -54,6 +57,7 @@ print $ length $ double_step the;
 eval_show $ fromJust $ improve_1 the double_step (eval_trie a10);
 
 };
+["read"] -> try_reading;
 _ -> error "unknown args";
 };
 
@@ -220,4 +224,9 @@ h = huffman arity $ Map.assocs $ phase1 t l;
 } in
 (h,Map.assocs $ hcounts $ Map.assocs $ phase1 t l);
 
+try_reading :: IO ();
+try_reading = do {
+(t :: Ctrie) <- getContents >>= return . read;
+print t;
+}
 }
