@@ -24,13 +24,18 @@ main = getArgs >>= \case {
 ["alice",n] -> let {
 corpus = take (read n) alice;
 } in
-print $ show_hdepth corpus $ p1_keep corpus;
-["go",fn] -> do {
-corpus <- read_corpus fn;
+print $ show_hdepth corpus $ p1_keep initial corpus;
+("go":fn:rest) -> do {
 print arity;
+corpus <- read_corpus fn;
 putStrLn $ "corpus length = " ++ (show $ length corpus);
 putStrLn $ "corpus weight = " ++ (show $ sum $ map ( \ (s,n) -> n*(fromIntegral$length s)) corpus);
-print $ show_hdepth corpus $ p1_keep corpus;
+my_initial :: Ctrie <- case rest of {
+  [] -> return initial;
+  [initial_ctrie] -> readFile initial_ctrie >>= return . read;
+  _ -> error "too many arguments to 'go'";
+};
+print $ show_hdepth corpus $ p1_keep my_initial corpus;
 };
 ["z2"] -> do {
 -- this, with HuffmanArity 3, shows that greedy 1 step does not work.
@@ -57,7 +62,7 @@ print $ length $ double_step the;
 eval_show $ fromJust $ improve_1 the double_step (eval_trie a10);
 
 };
-["read"] -> try_reading;
+["read",corpus,triefile] -> try_reading corpus triefile ;
 _ -> error "unknown args";
 };
 
@@ -188,8 +193,8 @@ eval (s,n) = n*gettable s;
 eval_trie :: Wordcounts -> Ctrie -> Integer;
 eval_trie l t = hscore $ Map.assocs $ phase1 t l;
 
-p1_keep :: Wordcounts -> Ctrie;
-p1_keep l = keep_improving initial cmod (eval_trie l);
+p1_keep :: Ctrie -> Wordcounts -> Ctrie;
+p1_keep my_initial l = keep_improving my_initial cmod (eval_trie l);
 
 p1_improve :: Wordcounts -> Ctrie -> Maybe Ctrie;
 p1_improve l t = improve_1 t cmod (eval_trie l);
@@ -224,9 +229,13 @@ h = huffman arity $ Map.assocs $ phase1 t l;
 } in
 (h,Map.assocs $ hcounts $ Map.assocs $ phase1 t l);
 
-try_reading :: IO ();
-try_reading = do {
-(t :: Ctrie) <- getContents >>= return . read;
+try_reading :: String -> String -> IO ();
+try_reading corpusfile tfile = do {
+(t :: Ctrie) <- readFile tfile >>= return . read;
+corpus :: Wordcounts <- read_corpus corpusfile;
 print t;
+let {(x,y) = show_hdepth corpus t;};
+print x;
+print y;
 }
 }
