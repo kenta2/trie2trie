@@ -11,6 +11,7 @@ import Alice;
 import Data.Maybe;
 import System.Environment;
 import Control.Parallel.Strategies;
+import Control.Monad;
 
 -- cycle in type synonym declarations
 -- type Foo a = Map a (Foo a);
@@ -237,5 +238,25 @@ print t;
 let {(x,y) = show_hdepth corpus t;};
 print x;
 print y;
-}
+};
+
+-- all leaves should have True liveness
+newtype TrieX a = TrieX (Map a (TrieX a), Bool) deriving (Show,Read);
+
+xlongest_prefix :: forall a m . (Ord a, MonadPlus m) => TrieX a -> [a] -> m ([a],[a]);
+xlongest_prefix _ [] = return ([],[]);
+xlongest_prefix (TrieX (t,l)) s@(h:rest) = let {
+  self :: m ([a],[a]);
+  self = if l then return ([],s) else mzero;
+} in case Map.lookup h t of {
+  Nothing -> self;
+  Just subt -> mplus (do {
+    (x,y) <- xlongest_prefix subt rest;
+    return (h:x,y);
+    }) self;
+};
+
+test :: TrieX Char -> String -> Maybe (String,String);
+test = xlongest_prefix;
+
 }
